@@ -1,4 +1,4 @@
-# usersettings
+# User Settings
 Python library to manage application user settings
 
 - Version: 0.1.0
