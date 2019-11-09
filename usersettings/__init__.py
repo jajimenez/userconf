@@ -61,6 +61,47 @@ def set_application_id(id: Optional[str]):
                                                _app_settings_file_name)
 
 
+def setting_exists(id: str) -> bool:
+    """Returns whether a setting exists or not, given its ID. An exception is
+    raised if the working application ID is not set.
+
+    Args:
+        id: Setting ID.
+
+    Returns:
+        Boolean which value is True if the setting exists or False otherwise.
+    """
+
+    global _app_id, _app_settings_file_path
+
+    # Check the current working application ID
+    if _app_id is None:
+        raise Exception("Working application ID not set.")
+
+    # Check the ID
+    if (type(id) != str or id == "" or " " in id or "\n" in id or "\t" in id or
+            "\r" in id):
+        raise Exception(
+            "Wrong ID. The ID must be a string containing an alphanumeric "
+            "word."
+        )
+
+    # Default value
+    exists = False
+
+    # Check if the settings file exists
+    if os.path.exists(_app_settings_file_path):
+        # Read settings
+        with open(_app_settings_file_path, "rt") as f:
+            text = f.read()
+
+            if text != "":
+                settings = json.loads(text, encoding="utf-8")
+                exists = id in settings
+
+    return exists
+
+
 def get_setting_value(id: str, default_value: Optional[object] = None) \
         -> Optional[object]:
     """Returns the value of a setting given its ID, or a default value if the
