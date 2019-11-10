@@ -1,4 +1,4 @@
-# User Settings
+# UserConf
 Python library to manage application user settings
 
 - Version: 0.1.0
@@ -14,21 +14,21 @@ the application.
 ### Usage example
 
 ```python
-import usersettings as us
+import userconf as uc
 
 # Set the working application ID. The JSON file containing the settings will be
 # saved in a directory which name is the dot character "." followed by the ID
 # provided when calling the following function. This directory will be created
 # inside the user's home directory.
-us.set_application_id("exampleapp")
+uc.set_application_id("exampleapp")
 
 # Write a setting value. This is done by providing its ID and value. The value
 # can be any JSON serializable object (e.g. a string, a list, a dictionary...).
-us.set_setting_value("setting_example", "Example value")
+uc.set_setting_value("setting_example", "Example value")
 
 # Read a setting value. This is done by providing its ID and an optional
 # default value that will be returned if the setting doesn't exist.
-v = us.get_setting_value("setting_example", "Default value")
+v = uc.get_setting_value("setting_example", "Default value")
 ```
 
 ### Function list

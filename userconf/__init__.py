@@ -1,4 +1,4 @@
-# User Settings
+# UserConf 0.1.0
 # Jose A. Jimenez (jajimenezcarm@gmail.com)
 
 import os
