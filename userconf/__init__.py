@@ -4,7 +4,7 @@
 import os
 import pathlib
 import json
-from typing import Optional
+from typing import Optional, List
 
 
 _app_id = None
@@ -59,6 +59,35 @@ def set_application_id(id: Optional[str]):
 
         _app_settings_file_path = os.path.join(_app_settings_dir_path,
                                                _app_settings_file_name)
+
+
+def get_all_setting_ids() -> List[str]:
+    """Returns a list with the IDs of all existing settings. An exception is
+    raised if the working application ID is not set.
+
+    Returns:
+        List of string.
+    """
+
+    global _app_id
+
+    ids = []
+
+    # Check the current working application ID
+    if _app_id is None:
+        raise Exception("Working application ID not set.")
+
+    # Check if the settings file exists
+    if os.path.exists(_app_settings_file_path):
+        # Read settings
+        with open(_app_settings_file_path, "rt") as f:
+            text = f.read()
+
+            if text != "":
+                settings = json.loads(text, encoding="utf-8")
+                ids = [k for k in settings.keys()]
+
+    return ids
 
 
 def setting_exists(id: str) -> bool:
