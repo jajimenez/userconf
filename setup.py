@@ -1,4 +1,4 @@
-# UserConf 0.1.0
+# UserConf 0.2.0
 # Jose A. Jimenez (jajimenezcarm@gmail.com)
 
 # To generate the PIP packages, run this command:
@@ -12,7 +12,7 @@ with open("README.md", "rt") as f:
 
 setuptools.setup(
     name="userconf",
-    version="0.1.0",
+    version="0.2.0",
     description="Python library to manage application user settings",
     author="Jose A. Jimenez",
     author_email="jajimenezcarm@gmail.com",
@@ -21,9 +21,8 @@ setuptools.setup(
     url="https://github.com/jajimenez/userconf",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Operating System :: POSIX :: Linux",
-        "Operating System :: Microsoft :: Windows",
-        "Operating System :: MacOS :: MacOS X"
+        "Operating System :: OS Independent",
+        "License :: OSI Approved :: MIT License"
     ],
     python_requires=">=3.6",
     packages=setuptools.find_packages()

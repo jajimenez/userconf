@@ -1,4 +1,4 @@
-# UserConf 0.1.0
+# UserConf 0.2.0
 # Jose A. Jimenez (jajimenezcarm@gmail.com)
 
 import os
