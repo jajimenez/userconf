@@ -3,7 +3,7 @@ Python library to manage application user settings
 
 - Version: 0.2.0
 - Author: Jose A. Jimenez (jajimenezcarm@gmail.com)
-- License: MIT License
+- License: MIT
 
 ### Introduction
 
