@@ -16,6 +16,7 @@ setuptools.setup(
     description="Python library to manage application user settings",
     author="Jose A. Jimenez",
     author_email="jajimenezcarm@gmail.com",
+    license="MIT",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/jajimenez/userconf",
