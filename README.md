@@ -36,6 +36,7 @@ v = uc.get_setting_value("setting_example", "Default value")
 ```
 get_application_id()
 set_application_id(id)
+get_all_setting_ids()
 setting_exists(id)
 get_setting_value(id, default_value = None)
 set_setting_value(id, value)
