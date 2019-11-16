@@ -66,7 +66,7 @@ def get_all_setting_ids() -> List[str]:
     raised if the working application ID is not set.
 
     Returns:
-        List of string.
+        List of strings.
     """
 
     global _app_id
