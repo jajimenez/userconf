@@ -8,7 +8,7 @@ inside the home directory of the user who is running the application.
 
 #### Project information
 
-- Version: 0.2.1
+- Version: 0.3.0
 - Author: Jose A. Jimenez (jajimenezcarm@gmail.com)
 - License: MIT
 
