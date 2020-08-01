@@ -7,8 +7,9 @@ import json
 from typing import Optional, List
 
 
-_app_id = None
+__version__ = "0.2.1"
 
+_app_id = None
 _user_home_dir_path = str(pathlib.Path.home())
 _app_settings_dir_path = None
 _app_settings_file_name = "settings.json"
