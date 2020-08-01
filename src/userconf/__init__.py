@@ -171,7 +171,7 @@ def get_setting_value(
 
     # Check the working application ID and the setting ID
     _check_app_id()
-    _check_set_id(set_id)
+    _check_set_id_valid(set_id)
 
     # Check if the settings file exists
     if os.path.exists(_app_set_file):
