@@ -32,16 +32,18 @@ uc.set_setting_value("setting_example", "Example value")
 v = uc.get_setting_value("setting_example", "Default value")
 ```
 
-## Function list
+## Main functions
 
 ```python
-get_application_id()
-set_application_id(id)
-get_all_setting_ids()
-setting_exists(id)
-get_setting_value(id, default_value = None)
-set_setting_value(id, value)
-clear_setting(id)
+get_application_id() -> Optional[str]
+set_application_id(app_id: Optional[str])
+
+get_all_setting_ids() -> List[str]
+setting_exists(set_id: str) -> bool
+get_setting_value(set_id: str, default_value: Optional[object] = None) -> Optional[object]
+set_setting_value(set_id: str, value: Optional[object])
+
+clear_setting(set_id: str)
 clear_all_settings()
 ```
 
