@@ -152,9 +152,10 @@ def get_setting_value(
     set_id: str, default_value: Optional[object] = None
 ) -> Optional[object]:
     """Returns the value of a setting given its ID, or a default value if the
-    setting doesn't exist. An exception is raised if the working application ID
-    is not set or if the setting ID is invalid. The setting ID must contain
-    only letters, numbers, hyphens or underscores.
+    setting doesn't exist. No exception is raised if the setting doesn't exist
+    and the default value is not provided. An exception is raised if the
+    working application ID is not set or if the setting ID is invalid. The
+    setting ID must contain only letters, numbers, hyphens or underscores.
 
     Args:
         set_id (str): Setting ID.
