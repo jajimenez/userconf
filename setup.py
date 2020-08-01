@@ -1,8 +1,5 @@
-# UserConf 0.2.0
-# Jose A. Jimenez (jajimenezcarm@gmail.com)
-
-# To generate the PIP packages, run this command:
-#     python3 setup.py sdist bdist_wheel
+"""UserConf Setup script
+"""
 
 import setuptools
 
@@ -12,8 +9,8 @@ with open("README.md", "rt") as f:
 
 setuptools.setup(
     name="userconf",
-    version="0.2.0",
-    description="Python library to manage application user settings",
+    version="0.3.0",
+    description="Application user settings management library",
     author="Jose A. Jimenez",
     author_email="jajimenezcarm@gmail.com",
     license="MIT",
