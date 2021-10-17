@@ -1,279 +1,177 @@
-"""userconf
+"""Userconf.
 
-Application user settings management library.
+Userconf is a Python library to manage the user configuration of applications.
+It allows you to write and read key-value settings for a Python application in
+a JSON file inside the home directory of the user running the application.
 """
 
-from typing import Optional, List
-import os
-import pathlib
+from os import listdir, mkdir, remove, rmdir
+from os.path import join, exists
+from pathlib import Path
 import re
 import json
+from typing import Any
 
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
-_id_regex = r"[a-zA-Z0-9-_]+$"
-_app_id = None
 
-_user_dir = str(pathlib.Path.home())
-_app_set_dir = None
-_app_set_fname = "settings.json"
-_app_set_file = None
+class ValidationError(Exception):
+    """Exception raised when a value is invalid."""
 
+    pass
 
-def _check_app_id_valid(app_id):
-    """Checks if an application ID is valid and raises an Exception if it's
-    not.
-    """
 
-    if re.match(_id_regex, app_id) is None:
-        raise Exception(
-            "Invalid application ID. The ID must be either None or a string "
-            "containing only letters, numbers, hyphens or underscores."
-        )
+class Userconf():
+    """User configuration manager."""
 
+    _id_re = r"[a-zA-Z0-9-_]+$"
 
-def _check_set_id_valid(set_id):
-    """Checks if a setting ID is valid and raises an Exception if it's not.
-    """
+    _id_error = (
+        "Invalid ID. Its value must contain at least 1 character and only "
+        "letters, numbers, hyphens or underscores."
+    )
 
-    if re.match(_id_regex, set_id) is None:
-        raise Exception(
-            "Invalid setting ID. The ID must be either None or a string "
-            "containing only letters, numbers, hyphens or underscores."
-        )
+    def __init__(self, app_id: str):
+        """Initialize the instance.
 
+        :param app_id: Application ID. Its value must contain at least 1
+        character and only letters, numbers, hyphens or underscores.
+        """
+        self._user_dir = str(Path.home())
+        self.app_id = app_id
 
-def _check_app_id():
-    """Checks if the current working application ID is set and raises an
-    Exception if it's not.
-    """
+    def _validate_id(self, _id: str):
+        """Validate an application or setting ID.
 
-    global _app_id
+        A `ValidationError` exception is raised if `_id` is invalid.
 
-    if _app_id is None:
-        raise Exception("Working application ID not set.")
+        :param _id: Application or setting ID.
+        """
+        if type(_id) != str or re.match(self._id_re, _id) is None:
+            raise ValidationError(self._id_error)
 
+    @property
+    def app_id(self) -> str:
+        """Get the application ID.
 
-def get_application_id() -> Optional[str]:
-    """Returns the working application ID.
+        :return: Application ID.
+        """
+        return self._app_id
 
-    Returns:
-        Optional[str]: Working application ID.
-    """
+    @app_id.setter
+    def app_id(self, value: str):
+        """Set the application ID.
 
-    global _app_id
-    return _app_id
+        A `ValidationError` exception is raised if `value` is invalid.
 
+        :param value: Application ID. Its value must contain at least 1
+        character and only letters, numbers, hyphens or underscores.
+        """
+        self._validate_id(value)
 
-def set_application_id(app_id: Optional[str]):
-    """Sets the working application ID. An Exception is raised if the ID is
-    invalid.
+        self._app_id = value
+        self._app_dir = join(self._user_dir, f".{value}")
+        self._app_file = join(self._app_dir, "settings.json")
 
-    Args:
-        app_id (Optional[str]): New working application ID. The ID can be a
-            string or None (to delete the current value). If the ID is a
-            string, it must contain only letters, numbers, hyphens or
-            underscores.
-    """
+    def _read_data(self) -> dict:
+        """Read settings data.
 
-    global _app_id, _user_dir, _app_set_dir, _app_set_file
+        :return: Data.
+        """
+        data = {}
 
-    if app_id is None:
-        _app_set_dir = None
-        _app_set_file = None
-    else:
-        # Check the ID
-        _check_app_id_valid(app_id)
+        if exists(self._app_file):
+            with open(self._app_file, "r") as f:
+                data = json.load(f)
 
-        # Update the paths
-        _app_set_dir = os.path.join(_user_dir, f".{app_id}")
-        _app_set_file = os.path.join(_app_set_dir, _app_set_fname)
+        return data
 
-    # Update the application ID
-    _app_id = app_id
+    def _write_data(self, data: dict):
+        """Write settings data.
 
+        :param data: Data.
+        """
+        if not exists(self._app_dir):
+            mkdir(self._app_dir)
 
-def get_all_setting_ids() -> List[str]:
-    """Returns a list with the IDs of all existing settings. An exception is
-    raised if the working application ID is not set.
+        with open(self._app_file, "w") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
 
-    Returns:
-        List[str]: Setting IDs.
-    """
+    def get_all(self) -> list[str]:
+        """Get all the existing setting IDs.
 
-    global _app_id
-    set_ids = []
+        :return: Setting IDs.
+        """
+        return list(self._read_data().keys())
 
-    # Check the working application ID
-    _check_app_id()
+    def contains(self, _id: str) -> bool:
+        """Return whether the manager contains a setting ID or not.
 
-    # Check if the settings file exists
-    if os.path.exists(_app_set_file):
-        # Read settings
-        with open(_app_set_file, "r") as f:
-            settings = json.load(f)
-            set_ids = list(settings.keys())
-
-    return set_ids
-
-
-def setting_exists(set_id: str) -> bool:
-    """Returns whether a setting exists or not, given its ID. An exception is
-    raised if the working application ID is not set or if the setting ID is
-    invalid. The setting ID must contain only letters, numbers, hyphens or
-    underscores.
-
-    Args:
-        set_id (str): Setting ID.
-
-    Returns:
-        bool: True if the setting exists or False otherwise.
-    """
-
-    global _id_regex, _app_id, _app_set_file
-    exists = False
-
-    # Check the working application ID and the setting ID
-    _check_app_id()
-    _check_set_id_valid(set_id)
-
-    # Check if the settings file exists
-    if os.path.exists(_app_set_file):
-        # Read settings
-        with open(_app_set_file, "r") as f:
-            settings = json.load(f)
-            exists = set_id in settings
-
-    return exists
-
-
-def get_setting_value(
-    set_id: str, default_value: Optional[object] = None
-) -> Optional[object]:
-    """Returns the value of a setting given its ID, or a default value if the
-    setting doesn't exist. No exception is raised if the setting doesn't exist
-    and the default value is not provided. An exception is raised if the
-    working application ID is not set or if the setting ID is invalid. The
-    setting ID must contain only letters, numbers, hyphens or underscores.
+        A `ValidationError` exception is raised if `_id` is invalid.
 
-    Args:
-        set_id (str): Setting ID.
-        default_value (Optional[object]): Value to return if the setting
-            doesn't exist. This value must be a JSON serializable object or
-            None.
-
-    Returns:
-        Optional[object]: Setting value.
-    """
-
-    global _id_regex, _app_id, _app_set_file
-    value = default_value
-
-    # Check the working application ID and the setting ID
-    _check_app_id()
-    _check_set_id_valid(set_id)
-
-    # Check if the settings file exists
-    if os.path.exists(_app_set_file):
-        # Read settings
-        with open(_app_set_file, "r") as f:
-            settings = json.load(f)
-
-            if set_id in settings:
-                value = settings[set_id]
-
-    return value
-
-
-def set_setting_value(set_id: str, value: Optional[object]):
-    """Sets the value of a setting given its ID. An exception is raised if the
-    working application ID is not set or if the setting ID is invalid. The
-    setting ID must contain only letters, numbers, hyphens or underscores.
-
-    Args:
-        set_id (str): Setting ID.
-        value (Optional[object]): New setting value. This value must be a JSON
-            serializable object or None.
-    """
-
-    global _app_id, _app_set_dir, _app_set_file
-
-    # Check the working application ID and the setting ID
-    _check_app_id()
-    _check_set_id_valid(set_id)
-
-    # If the settings directory doesn't exist, we create it.
-    if not os.path.exists(_app_set_dir):
-        os.makedirs(_app_set_dir)
-
-    # Check if the settings file exists
-    if os.path.exists(_app_set_file):
-        # Read settings
-        with open(_app_set_file, "r") as f:
-            settings = json.load(f)
-    else:
-        # Default settings
-        settings = dict()
-
-    # Update settings
-    settings[set_id] = value
-
-    # Write settings
-    with open(_app_set_file, "w") as f:
-        json.dump(settings, f, indent=4, ensure_ascii=False)
-
-
-def clear_setting(set_id: str):
-    """Deletes a setting given its ID. No exception is raised if the setting
-    doesn't exist. An exception is raised if the working application ID is not
-    set or if the setting ID is invalid. The setting ID must contain only
-    letters, numbers, hyphens or underscores.
-
-    Args:
-        set_id (str): Setting ID.
-    """
-
-    global _app_id, _app_set_file
-
-    # Check the working application ID and the setting ID
-    _check_app_id()
-    _check_set_id_valid(set_id)
-
-    # Check if the settings file exists
-    if os.path.exists(_app_set_file):
-        # Read settings
-        with open(_app_set_file, "r") as f:
-            settings = json.load(f)
-
-        # Check if the setting exists
-        if set_id in settings:
-            # Update settings
-            del(settings[set_id])
-
-            # Write settings
-            with open(_app_set_file, "w") as f:
-                json.dump(settings, f, indent=4, ensure_ascii=False)
-
-
-def clear_all_settings():
-    """Deletes the settings directory, including the settings file. An
-    exception is raised if the working application ID is not set.
-    """
-
-    global _app_id, _app_set_dir, _app_set_file
-
-    # Check the working application ID
-    _check_app_id()
-
-    # Before deleting the settings directory with "os.rmdir", we need to delete
-    # all its files (which should be only the settings file). Otherwise, an
-    # exception would be raised from "os.rmdir".
-
-    # Check if the settings file exists
-    if os.path.exists(_app_set_file):
-        os.remove(_app_set_file)
-
-    # Check if the settings directory exists
-    if os.path.exists(_app_set_dir):
-        os.rmdir(_app_set_dir)
+        :param _id: Setting ID. Its value must contain at least 1 character and
+        only letters, numbers, hyphens or underscores.
+        :return: `True` if the setting exists or `False` otherwise.
+        """
+        self._validate_id(_id)
+        return _id in self._read_data()
+
+    def get(self, _id: str, default: Any = None) -> Any:
+        """Return a setting value or a default value if it doesn't exist.
+
+        A `ValidationError` exception is raised if `_id` is invalid.
+
+        :param _id: Setting ID. Its value must contain at least 1 character and
+        only letters, numbers, hyphens or underscores.
+        :param default: Value to return if the setting doesn't exist.
+        :return: Setting value if the setting exists or `default` otherwise.
+        """
+        self._validate_id(_id)
+        return self._read_data().get(_id, default)
+
+    def set(self, _id: str, value: Any):
+        """Set a setting value.
+
+        A `ValidationError` exception is raised if `_id` is invalid.
+
+        :param _id: Setting ID. Its value must contain at least 1 character and
+        only letters, numbers, hyphens or underscores.
+        :param value: Setting value. Its value must be a JSON serializable
+        value.
+        """
+        self._validate_id(_id)
+
+        data = self._read_data()
+        data[_id] = value
+
+        self._write_data(data)
+
+    def delete(self, _id: str):
+        """Delete a setting.
+
+        No exception is raised if the setting doesn't exist. A
+        `ValidationError` exception is raised if `_id` is invalid.
+
+        :param _id: Setting ID. Its value must contain at least 1 character and
+        only letters, numbers, hyphens or underscores.
+        """
+        self._validate_id(_id)
+        data = self._read_data()
+
+        if _id in data:
+            data.pop(_id)
+
+        self._write_data(data)
+
+    def delete_all(self):
+        """Delete the settings file.
+
+        The directory of the settings file is also deleted if it doesn't
+        contain other files or directories.
+        """
+        if exists(self._app_file):
+            remove(self._app_file)
+
+        if exists(self._app_dir) and len(listdir(self._app_dir)) == 0:
+            rmdir(self._app_dir)
