@@ -10,7 +10,7 @@ from os.path import join, exists
 from pathlib import Path
 import re
 import json
-from typing import Any
+from typing import Any, Optional
 
 
 __version__ = "0.4.0"
@@ -55,7 +55,7 @@ class Userconf():
     def app_id(self) -> str:
         """Get the application ID.
 
-        :return: Application ID.
+        :returns: Application ID.
         """
         return self._app_id
 
@@ -77,7 +77,7 @@ class Userconf():
     def _read_data(self) -> dict:
         """Read settings data.
 
-        :return: Data.
+        :returns: Data.
         """
         data = {}
 
@@ -101,7 +101,7 @@ class Userconf():
     def get_all(self) -> list[str]:
         """Get all the existing setting IDs.
 
-        :return: Setting IDs.
+        :returns: Setting IDs.
         """
         return list(self._read_data().keys())
 
@@ -112,12 +112,12 @@ class Userconf():
 
         :param _id: Setting ID. Its value must contain at least 1 character and
         only letters, numbers, hyphens or underscores.
-        :return: `True` if the setting exists or `False` otherwise.
+        :returns: `True` if the setting exists or `False` otherwise.
         """
         self._validate_id(_id)
         return _id in self._read_data()
 
-    def get(self, _id: str, default: Any = None) -> Any:
+    def get(self, _id: str, default: Optional[Any] = None) -> Optional[Any]:
         """Return a setting value or a default value if it doesn't exist.
 
         A `ValidationError` exception is raised if `_id` is invalid.
@@ -125,12 +125,12 @@ class Userconf():
         :param _id: Setting ID. Its value must contain at least 1 character and
         only letters, numbers, hyphens or underscores.
         :param default: Value to return if the setting doesn't exist.
-        :return: Setting value if the setting exists or `default` otherwise.
+        :returns: Setting value if the setting exists or `default` otherwise.
         """
         self._validate_id(_id)
         return self._read_data().get(_id, default)
 
-    def set(self, _id: str, value: Any):
+    def set(self, _id: str, value: Optional[Any]):
         """Set a setting value.
 
         A `ValidationError` exception is raised if `_id` is invalid.
