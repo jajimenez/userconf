@@ -1,7 +1,7 @@
 # Userconf
-Userconf is a Python library to manage application user settings. It allows you
-to write and read key-value settings for a Python application in a JSON file
-inside the home directory of the user who is running the application.
+Userconf is a Python library to manage the user configuration of applications.
+It allows you to write and read key-value settings for a Python application in
+a JSON file inside the home directory of the user running the application.
 
 #### Project information
 
@@ -13,79 +13,80 @@ inside the home directory of the user who is running the application.
 ## Usage example
 
 ```python
-import userconf as uc
+from userconf import Userconf
 
-# Set the working application ID. The JSON file containing the settings will be
-# saved in a directory which name is the dot character "." followed by the ID
-# provided when calling the following function. This directory will be created
-# inside the user's home directory.
-uc.set_application_id("exampleapp")
+# Create an instance of the Userconf class providing an application ID. The
+# settings will be saved in a JSON file named "settings.json" in a directory
+# which name is the concatenation of the dot character "." and the application
+# ID. This directory will be created inside the user's home directory (e.g.
+# "/home/user/example-app").
+uc = Userconf("example-app")
 
-# Write a setting value. This is done by providing its ID and value. The value
-# can be any JSON serializable object (e.g. a string, a list, a dictionary...).
-uc.set_setting_value("setting_example", "Example value")
+# Set a setting value providing the setting ID and the value. The value can be
+# any JSON serializable object (a string, an integer, a list, a dictionary...).
+uc.set("example-id", "Example value")
 
-# Read a setting value. This is done by providing its ID and an optional
-# default value that will be returned if the setting doesn't exist.
-v = uc.get_setting_value("setting_example", "Default value")
+# Get a setting value given the setting ID. If the ID doesn't exist, None is
+# returned.
+v = uc.get("example-id")
+
+# Set a default value to return if the setting ID doesn't exist
+v = uc.get("example-id-2", "Default value")
+
+# Delete a setting given its ID
+uc.delete("example-id")
+
+# Delete all the settings. The settings JSON file is deleted. The directory
+# containing the file is deleted as well as long as it doesn't have other
+# files or directories.
+uc.delete_all()
 ```
 
-## Main functions
+## Userconf class methods
 
 ```python
-get_application_id() -> Optional[str]
-set_application_id(app_id: Optional[str])
-
-get_all_setting_ids() -> List[str]
-setting_exists(set_id: str) -> bool
-get_setting_value(set_id: str, default_value: Optional[object] = None) -> Optional[object]
-set_setting_value(set_id: str, value: Optional[object])
-
-clear_setting(set_id: str)
-clear_all_settings()
+get_all(self) -> list[str]
+contains(self, _id: str) -> bool
+get(self, _id: str, default: Optional[Any] = None) -> Optional[Any]
+set(self, _id: str, value: Optional[Any])
+delete(self, _id: str)
+delete_all(self)
 ```
 
-## Requirements
+## How to install
 
-#### For installing the library:
+We can install Userconf through PIP:
 
-- Python >= 3.6
-
-#### For building the library:
-
-- Python >= 3.6
-- Python libraries:
-  - **wheel**
-
-## How to build redistributable files
-
-To build the **Wheel** package, run:
-
+```bash
+pip install notelist
 ```
+
+Alternatively, we can generate and install the **built package** or the
+**source archive** from the source code. The *wheel* package is needed for
+generating the built package from the project directory:
+
+To generate and install the **built package** (preferred), run the
+following commands:
+
+```bash
+pip install wheel
 python setup.py bdist_wheel
+pip install ./dist/notelist*.whl
 ```
 
-To build the **source** package, run:
+To generate and install the **source archive**, run the following commands from
+the project directory:
 
-```
+```bash
 python setup.py sdist
+pip install ./dist/notelist*.tar.gz
 ```
 
-In either case, a new directory called ***dist*** will be generated with the
-correspondent package.
+## How to run the unit tests
 
-## How to install the library
+To run all the unit tests, run the following command from the project
+directory:
 
-You can install the library from the **source code** by running:
-
+```bash
+python -m unittest discover test
 ```
-python setup.py install
-```
-
-Or from the **Wheel** or **source** package with PIP by running:
-
-```
-pip install ./dist/<package_file>
-```
-
-Where `<package_file>` is the package file name.
