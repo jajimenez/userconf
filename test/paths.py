@@ -1,9 +1,10 @@
-"""Module to insert the "src" folder in "sys.path".
-"""
+"""Module to insert the "src" directory in "sys.path"."""
 
-from os.path import dirname, abspath, realpath, join
 import sys
+from os.path import dirname, abspath, realpath, join
 
-current_dir = dirname(abspath(__file__))
-src_path = realpath(join(current_dir, "..", "src"))
-sys.path.insert(0, src_path)
+
+_dir = dirname(abspath(__file__))
+_src_dir = realpath(join(_dir, "..", "src"))
+
+sys.path.insert(0, _src_dir)
