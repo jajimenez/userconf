@@ -10,7 +10,7 @@ if __name__ == "__main__":
     setuptools.setup(
         name="userconf",
         version="0.4.0",
-        description="Application user configuration management library",
+        description="Application user configuration management Python library",
         author="Jose A. Jimenez",
         author_email="jajimenezcarm@gmail.com",
         license="MIT",
