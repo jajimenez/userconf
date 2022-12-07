@@ -1,11 +1,9 @@
 # Userconf
-Userconf is a Python library to manage the user configuration of applications.
-It allows you to write and read key-value settings for a Python application in
-a JSON file inside the home directory of the user running the application.
+Userconf is a user configuration management Python library. It allows you to
+store key-value settings in a JSON file inside the home directory of the user
+running the application.
 
-#### Project information
-
-- Version: 0.4.0
+- Version: 0.5.0
 - Author: Jose A. Jimenez (jajimenezcarm@gmail.com)
 - License: MIT License
 - Repository: https://github.com/jajimenez/userconf

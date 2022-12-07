@@ -1,16 +1,18 @@
-"""Userconf Setup script."""
+"""Userconf - Setup script."""
 
-import setuptools
+import setuptools as st
+
+from src.userconf import __version__ as version
 
 
 if __name__ == "__main__":
     with open("README.md", "r") as f:
         long_desc = f.read()
 
-    setuptools.setup(
+    st.setup(
         name="userconf",
-        version="0.4.0",
-        description="Application user configuration management Python library",
+        version=version,
+        description="User configuration management library",
         author="Jose A. Jimenez",
         author_email="jajimenezcarm@gmail.com",
         license="MIT",
