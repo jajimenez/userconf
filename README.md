@@ -1,5 +1,5 @@
-# Userconf
-Userconf is a user configuration management Python library. It allows you to
+# UserConf
+UserConf is a user configuration management Python library. It allows you to
 store key-value settings in a JSON file inside the home directory of the user
 running the application.
 

@@ -1,4 +1,4 @@
-"""Userconf - Setup script."""
+"""UserConf - Setup."""
 
 import setuptools as st
 
