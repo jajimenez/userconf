@@ -28,13 +28,15 @@ class UserConf():
         :param app_id: Application ID. It must contain at least 1 character and
         must contain and only letters, numbers, hyphens or underscores.
         """
+        # Absolute path of the data directory
         self._data_dir = None
 
         # Managers
         self._settings = None
         self._files = None
 
-        self.app_id = app_id  # This may raise KeyValidationError
+        # This assigns the manager variables and may raise KeyValidationError
+        self.app_id = app_id
 
     @property
     def app_id(self) -> str:
