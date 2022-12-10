@@ -1,7 +1,7 @@
 """UserConf - Settings."""
 
 from os import makedirs
-from os.path import dirname, exists
+from os.path import exists, dirname, exists
 import json
 from typing import Any
 
@@ -14,8 +14,9 @@ class SettingsManager():
     def __init__(self, path: str):
         """Initialize the instance loading the settings data from a JSON file.
 
-        When setting or removing a setting key, the file, the file directory
-        and any intermediate directories are created if they don't exist.
+        If the file doesn't exist initially, it will be created, along with its
+        directory and intermediate directories, the first time a setting is
+        added or removed.
 
         :param path: File path.
         """
@@ -24,8 +25,11 @@ class SettingsManager():
 
     def _load(self) -> dict:
         """Load the settings data from the JSON file."""
-        with open(self._path) as f:
-            self._data = json.load(f)
+        if exists(self._path):
+            with open(self._path) as f:
+                self._data = json.load(f)
+        else:
+            self._data = {}
 
     def _save(self):
         """Save the settings data to the JSON file.
