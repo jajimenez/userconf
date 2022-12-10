@@ -14,8 +14,8 @@ class SettingsManager():
     def __init__(self, path: str):
         """Initialize the instance loading the settings data from a JSON file.
 
-        If the file doesn't exist initially, it will be created, along with its
-        directory and intermediate directories, the first time a setting is
+        If the settings file doesn't exist initially, it will be created, along
+        with all its intermediate directories, the first time a setting is
         added or removed.
 
         :param path: File path.
