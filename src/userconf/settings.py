@@ -1,6 +1,6 @@
 """UserConf - Settings."""
 
-from os import makedirs, remove
+from os import makedirs
 from os.path import dirname, exists
 import json
 from typing import Any
@@ -116,17 +116,7 @@ class SettingsManager():
 
         self._save()
 
-    def delete_all(self, delete_file: bool = False):
-        """Delete all the settings keys.
-
-        If `delete_file` is `True`, the JSON file is deleted, but not its
-        directory and intermediate directories.
-
-        :param delete_file: Whether to delete the JSON file.
-        """
+    def delete_all(self):
+        """Delete all the settings keys."""
         self._data = {}
-
-        if delete_file:
-            remove(self._path)
-        else:
-            self._save()
+        self._save()
