@@ -1,7 +1,6 @@
 # UserConf
-UserConf is a user configuration management Python library. It allows you to
-store key-value settings in a JSON file inside the home directory of the user
-running the application.
+UserConf is a user configuration management Python library. It stores key-value
+settings in a JSON file inside the user home directory.
 
 - Version: 0.5.0
 - Author: Jose A. Jimenez (jajimenezcarm@gmail.com)
@@ -56,7 +55,7 @@ delete_all(self)
 We can install Userconf through PIP:
 
 ```bash
-pip install notelist
+pip install userconf
 ```
 
 Alternatively, we can generate and install the **built package** or the
