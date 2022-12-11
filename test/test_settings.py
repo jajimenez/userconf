@@ -1,4 +1,4 @@
-"""UserConf settings unit tests."""
+"""UserConf - Tests - Settings unit tests."""
 
 from os import remove, rmdir
 from os.path import join, exists

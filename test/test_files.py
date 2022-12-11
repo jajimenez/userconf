@@ -1,4 +1,4 @@
-"""UserConf files unit tests."""
+"""UserConf - Tests - Files unit tests."""
 
 from os import rmdir
 from os.path import join

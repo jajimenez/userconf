@@ -1,4 +1,4 @@
-"""UserConf root unit tests."""
+"""UserConf - Tests - Root unit tests."""
 
 import unittest
 
