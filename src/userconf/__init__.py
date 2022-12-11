@@ -31,7 +31,7 @@ class UserConf():
         must contain and only letters, numbers, hyphens or underscores.
         """
         # Absolute path of the data directory
-        self._data_dir = None
+        self._data_path = None
 
         # Managers
         self._settings = None
@@ -64,23 +64,23 @@ class UserConf():
         self._app_id = value
 
         # Paths
-        user_dir = str(Path.home())
-        self._data_dir = join(user_dir, f".{value}")
+        user_path = str(Path.home())
+        self._data_path = join(user_path, f".{value}")
 
-        settings_path = join(self._data_dir, "settings.json")
-        files_path = join(self._data_dir, "files")
+        settings_path = join(self._data_path, "settings.json")
+        files_path = join(self._data_path, "files")
 
         # Managers
-        self._settings = SettingsManager(self, settings_path)
-        self._files = FilesManager(self, files_path)
+        self._settings = SettingsManager(settings_path)
+        self._files = FilesManager(files_path)
 
     @property
-    def data_dir(self) -> str:
+    def data_path(self) -> str:
         """Return the absolute path of the data directory.
 
         :return: Directory path.
         """
-        return self._data_dir
+        return self._data_path
 
     @property
     def settings(self) -> SettingsManager:

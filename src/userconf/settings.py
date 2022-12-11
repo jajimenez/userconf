@@ -44,7 +44,7 @@ class SettingsManager():
             makedirs(dir_path)
 
         with open(self._path, "w") as f:
-            json.dump(self._path, f, indent=4, ensure_ascii=False)
+            json.dump(self._data, f, indent=4, ensure_ascii=False)
 
     @property
     def path(self) -> str:
@@ -103,26 +103,20 @@ class SettingsManager():
         self._data[key] = value
         self._save()
 
-    def delete(self, key: str, error: bool = True):
+    def delete(self, key: str):
         """Delete a setting.
 
         A `KeyValidationError` exception is raised if the setting key is
-        invalid. An `Exception` exception is raised if the setting doesn't
-        exist and `error` is `True`.
+        invalid.
 
         :param key: Setting key. It must contain at least 1 character and must
         contain only letters, numbers, hyphens or underscores.
-        :param error: Whether to raise an exception if the setting doesn't
-        exist.
         """
         validate_key(key)
 
         if key in self._data:
             self._data.pop(key)
-        elif error:
-            raise Exception(f'Setting "{key}" does not exist')
-
-        self._save()
+            self._save()
 
     def delete_all(self):
         """Delete all the settings."""
