@@ -1,7 +1,9 @@
 """UserConf.
 
 UserConf is a user configuration management Python library. It stores key-value
-settings in a JSON file inside the user home directory.
+settings in a JSON file and manages data files and directories. The JSON file
+and the data files and directories are inside a directory that is inside the
+user home directory.
 """
 
 from os.path import join
@@ -42,7 +44,7 @@ class UserConf():
     def app_id(self) -> str:
         """Get the application ID.
 
-        :returns: Application ID.
+        :return: Application ID.
         """
         return self._app_id
 
@@ -50,11 +52,13 @@ class UserConf():
     def app_id(self, value: str):
         """Set the application ID.
 
-        A `KeyValidationError` exception is raised if `value` is invalid.
+        A `KeyValidationError` exception is raised if the ID invalid.
 
-        :param app_id: Application ID. The data is stored in a directory named
-        ".<app_id>" inside the user home directory. This ID must contain at
-        least 1 character and only letters, numbers, hyphens or underscores.
+        :param app_id: Application ID. The name of the data directory is a
+        period (".") followed by the application ID. The data directory is
+        inside the user home directory. This ID must contain at least 1
+        character and must contain only letters, numbers, hyphens or
+        underscores.
         """
         validate_key(value)  # This call may raise KeyValidationError
         self._app_id = value
@@ -64,7 +68,7 @@ class UserConf():
         self._data_dir = join(user_dir, f".{value}")
 
         settings_path = join(self._data_dir, "settings.json")
-        files_path = join(self._data_dir, "files.json")
+        files_path = join(self._data_dir, "files")
 
         # Managers
         self._settings = SettingsManager(self, settings_path)
@@ -72,9 +76,9 @@ class UserConf():
 
     @property
     def data_dir(self) -> str:
-        """Return the data directory.
+        """Return the absolute path of the data directory.
 
-        :return: Data directory.
+        :return: Directory path.
         """
         return self._data_dir
 
@@ -82,7 +86,7 @@ class UserConf():
     def settings(self) -> SettingsManager:
         """Get the settings manager.
 
-        :returns: `SettingsManager` instance.
+        :return: `SettingsManager` instance.
         """
         return self._settings
 
@@ -90,6 +94,6 @@ class UserConf():
     def files(self) -> FilesManager:
         """Get the files manager.
 
-        :returns: `FilesManager` instance.
+        :return: `FilesManager` instance.
         """
         return self._files

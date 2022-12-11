@@ -1,7 +1,7 @@
 """UserConf - Settings."""
 
 from os import makedirs
-from os.path import exists, dirname, exists
+from os.path import abspath, exists, dirname
 import json
 from typing import Any
 
@@ -12,19 +12,20 @@ class SettingsManager():
     """User configuration settings manager."""
 
     def __init__(self, path: str):
-        """Initialize the instance loading the settings data from a JSON file.
+        """Initialize the instance loading the data from a settings JSON file.
 
-        If the settings file doesn't exist initially, it will be created, along
-        with all its intermediate directories, the first time a setting is
-        added or removed.
+        If the file doesn't exist initially, it will be created, along all its
+        intermediate directories, the first time a setting key is added or
+        deleted.
 
-        :param path: File path.
+        :param path: Relative or absolute path of the settings JSON file. If
+        it's a relative path, it's converted to its absolute path.
         """
-        self._path = path
+        self._path = abspath(path)
         self._load()
 
-    def _load(self) -> dict:
-        """Load the settings data from the JSON file."""
+    def _load(self):
+        """Load the data from the settings JSON file."""
         if exists(self._path):
             with open(self._path) as f:
                 self._data = json.load(f)
@@ -32,10 +33,10 @@ class SettingsManager():
             self._data = {}
 
     def _save(self):
-        """Save the settings data to the JSON file.
+        """Save the data to the settings JSON file.
 
-        The file, the file directory and any intermediate directories are
-        created if they don't exist.
+        The file and all its intermediate directories are created if they don't
+        exist.
         """
         dir_path = dirname(self._path)
 
@@ -47,7 +48,7 @@ class SettingsManager():
 
     @property
     def path(self) -> str:
-        """Return the JSON file path.
+        """Return the absolute path of the settings JSON file.
 
         :return: File path.
         """
@@ -61,38 +62,40 @@ class SettingsManager():
         return list(self._data.keys())
 
     def contains(self, key: str) -> bool:
-        """Return whether a setting key exists.
+        """Return whether a setting exists.
 
-        A `KeyValidationError` exception is raised if the key is invalid.
+        A `KeyValidationError` exception is raised if the setting key is
+        invalid.
 
         :param key: Setting key. It must contain at least 1 character and must
         contain and only letters, numbers, hyphens or underscores.
-        :return: Whether the key exists.
+        :return: Whether the setting exists.
         """
         validate_key(key)  # This may raise KeyValidationError
         return key in self._data
 
     def get(self, key: str, default: Any = None) -> Any:
-        """Return the value of a setting key.
+        """Return the value of a setting.
 
-        A `KeyValidationError` exception is raised if the key is invalid. If
-        the key doesn't exist, a default value is returned.
+        A `KeyValidationError` exception is raised if the setting key is
+        invalid. If the setting doesn't exist, a default value is returned.
 
         :param key: Setting key. It must contain at least 1 character and must
         contain and only letters, numbers, hyphens or underscores.
-        :param default: Value to return if the key doesn't exist.
+        :param default: Value to return if the setting doesn't exist.
         :return: Setting value or `default`.
         """
         validate_key(key)
         return self._data.get(key, default)
 
     def set(self, key: str, value: Any):
-        """Set the value of a setting key.
+        """Set the value of a setting.
 
-        A `KeyValidationError` exception is raised if the key is invalid.
+        A `KeyValidationError` exception is raised if the setting key is
+        invalid.
 
         :param key: Setting key. It must contain at least 1 character and must
-        contain and only letters, numbers, hyphens or underscores.
+        contain only letters, numbers, hyphens or underscores.
         :param value: Setting value. It must be serializable to JSON.
         """
         validate_key(key)
@@ -101,26 +104,27 @@ class SettingsManager():
         self._save()
 
     def delete(self, key: str, error: bool = True):
-        """Delete a setting key.
+        """Delete a setting.
 
-        A `KeyValidationError` exception is raised if the key is invalid. An
-        `Exception` exception is raised if the key doesn't exist and `error` is
-        `True`.
+        A `KeyValidationError` exception is raised if the setting key is
+        invalid. An `Exception` exception is raised if the setting doesn't
+        exist and `error` is `True`.
 
         :param key: Setting key. It must contain at least 1 character and must
-        contain and only letters, numbers, hyphens or underscores.
-        :param error: Whether to raise an exception if the key doesn't exist.
+        contain only letters, numbers, hyphens or underscores.
+        :param error: Whether to raise an exception if the setting doesn't
+        exist.
         """
         validate_key(key)
 
         if key in self._data:
             self._data.pop(key)
         elif error:
-            raise Exception(f'Key "{key}" does not exist')
+            raise Exception(f'Setting "{key}" does not exist')
 
         self._save()
 
     def delete_all(self):
-        """Delete all the settings keys."""
+        """Delete all the settings."""
         self._data = {}
         self._save()
