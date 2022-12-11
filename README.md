@@ -22,18 +22,18 @@ from userconf import UserConf
 # (e.g. "/home/user/.app/settings.json" and "/home/user/.app/files" in Linux).
 uc = UserConf("example-app")
 
-# Set a setting value providing the setting ID and the value. The value can be
-# any JSON serializable object (a string, an integer, a list, a dictionary...).
+# Set a setting value given the setting key and the value. The value can be any
+# object serializable to JSON (a string, an integer, a list, a dictionary...).
 uc.settings.set("example-key", "Example value")
 
-# Get a setting value given the setting ID. If the ID doesn't exist, None is
+# Get a setting value given the setting key. If the key doesn't exist, None is
 # returned.
 value = uc.settings.get("example-key")
 
-# Set a default value to return if the setting ID doesn't exist
+# Set a default value to return if the setting doesn't exist
 value = uc.settings.get("example-key-2", "Default value")
 
-# Delete a setting given its ID
+# Delete a setting given its key
 uc.settings.delete("example-key")
 
 # Delete all the settings
