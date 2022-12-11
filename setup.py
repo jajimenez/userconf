@@ -2,8 +2,6 @@
 
 import setuptools as st
 
-from src.userconf import __version__ as version
-
 
 if __name__ == "__main__":
     with open("README.md", "r") as f:
@@ -11,7 +9,7 @@ if __name__ == "__main__":
 
     st.setup(
         name="userconf",
-        version=version,
+        version="0.5.0",
         description="User configuration management library",
         author="Jose A. Jimenez",
         author_email="jajimenezcarm@gmail.com",
