@@ -1,4 +1,7 @@
-# 0.5.0
+# 0.5.0 - 11 Dec 2022
+
+- Files feature added
+- Project refactored
 
 # 0.4.0 - 18 Oct 2021
 
