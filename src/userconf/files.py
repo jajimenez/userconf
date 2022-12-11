@@ -31,8 +31,8 @@ class FilesManager:
     def get_path(self, name: str) -> str:
         """Return the absolute path of a managed file or directory.
 
-        The path returned is a concatenation of the absolute path of the root
-        directory (`self._root`) and the name of the managed file or directory
+        The path returned is the absolute path of the root directory
+        (`self._root_path`) followed by the name of the given file or directory
         (`name`). If the root directory doesn't exist, it's created along all
         its intermediate directories.
 
