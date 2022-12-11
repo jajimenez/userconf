@@ -48,7 +48,7 @@ path = uc.files.get_path("example-file.txt")
 
 ## How to install
 
-We can install UserConf through PIP:
+We can install UserConf in the following ways:
 
 ### Install from PyPI (Python Package Index)
 
