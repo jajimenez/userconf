@@ -74,7 +74,7 @@ commands from the project directory:
 ```bash
 pip install wheel
 python setup.py bdist_wheel
-pip install ./dist/notelist*.whl
+pip install ./dist/userconf*.whl
 ```
 
 To generate and install the **source archive**, run the following commands from
@@ -82,7 +82,7 @@ the project directory:
 
 ```bash
 python setup.py sdist
-pip install ./dist/notelist*.tar.gz
+pip install ./dist/userconf*.tar.gz
 ```
 
 ## How to run the unit tests
